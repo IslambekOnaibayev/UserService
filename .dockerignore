@@ -1,0 +1,11 @@
+**/bin
+**/obj
+**/node_modules
+WebAPI/wwwroot
+**/.vs
+**/.vscode
+**/.git
+*.md
+.env
+.env.*
+docker-compose.yml

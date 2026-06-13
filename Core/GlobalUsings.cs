@@ -1,0 +1,12 @@
+﻿global using Ardalis.GuardClauses;
+global using Ardalis.Result;
+global using Ardalis.SmartEnum;
+global using Ardalis.Specification;
+global using Mediator;
+global using NimblePros.SharedKernel;
+global using Core.UserAggregate;
+global using Core.UserAggregate.ValueObjects;
+global using Core.UserAggregate.Events;
+global using Vogen;
+global using Microsoft.Extensions.DependencyInjection;
+global using Microsoft.Extensions.Logging;

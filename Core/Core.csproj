@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Ardalis.Result" />
+    <PackageReference Include="Ardalis.SharedKernel" />
+    <PackageReference Include="Ardalis.SmartEnum" />
+    <PackageReference Include="Ardalis.Specification" />
+    <PackageReference Include="Mediator.Abstractions" />
+    <PackageReference Include="NimblePros.SharedKernel" />
+    <PackageReference Include="Vogen" />
+  </ItemGroup>
+
+</Project>

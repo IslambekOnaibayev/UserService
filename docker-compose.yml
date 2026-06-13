@@ -1,0 +1,43 @@
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: userservice
+      POSTGRES_USER: ${DB_USER:?set DB_USER in .env}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?set DB_PASSWORD in .env}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    ports:
+      - "80:8080"
+    environment:
+      PORT: 8080
+      ConnectionStrings__DefaultConnection: >-
+        Host=db;Port=5432;Database=userservice;
+        Username=${DB_USER};Password=${DB_PASSWORD}
+      JwtSettings__SecretKey: ${JWT_SECRET:?set JWT_SECRET in .env}
+      JwtSettings__Issuer: UserService
+      JwtSettings__Audience: UserService
+      JwtSettings__ExpirationMinutes: 60
+      Mailserver__Hostname: smtp.gmail.com
+      Mailserver__Port: 587
+      Mailserver__UseSsl: false
+      Mailserver__Username: ${MAIL_USERNAME:?set MAIL_USERNAME in .env}
+      Mailserver__Password: ${MAIL_PASSWORD:?set MAIL_PASSWORD in .env}
+      Mailserver__FromEmail: ${MAIL_USERNAME}
+      Mailserver__FromName: UserService
+      Mailserver__BaseUrl: ${APP_URL:-http://localhost}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
