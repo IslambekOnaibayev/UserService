@@ -16,11 +16,20 @@ namespace Core.UserAggregate.Handlers
                 "Sending confirmation email to {Email} for UserId {UserId}",
                 notification.Email.Value, notification.UserId.Value);
 
-            await _emailSender.SendConfirmationEmailAsync(
-                notification.Email.Value,
-                notification.UserId.Value,
-                notification.Token.Value,
-                cancellationToken);
+            try
+            {
+                await _emailSender.SendConfirmationEmailAsync(
+                    notification.Email.Value,
+                    notification.UserId.Value,
+                    notification.Token.Value,
+                    cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex,
+                    "Failed to send confirmation email to {Email}. User was created but email was not sent.",
+                    notification.Email.Value);
+            }
         }
     }
 }

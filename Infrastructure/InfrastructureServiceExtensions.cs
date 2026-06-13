@@ -66,8 +66,27 @@ namespace Infrastructure
             IServiceCollection services, IConfiguration configuration)
         {
             AddDbContextWithSqlServer(services, configuration);
-            services.AddScoped<IEmailSender, MimeKitEmailSender>();
+            RegisterEmailSender(services, configuration);
             services.AddScoped<IPasswordHasher, PasswordHasher>();
+        }
+
+        private static void RegisterEmailSender(IServiceCollection services, IConfiguration configuration)
+        {
+            var resendApiKey = configuration["Resend:ApiKey"];
+            if (!string.IsNullOrWhiteSpace(resendApiKey))
+            {
+                services.AddHttpClient("resend", c =>
+                {
+                    c.DefaultRequestHeaders.Add("Authorization", $"Bearer {resendApiKey}");
+                });
+                services.Configure<ResendConfiguration>(
+                    configuration.GetSection(ResendConfiguration.SectionName));
+                services.AddScoped<IEmailSender, ResendEmailSender>();
+            }
+            else
+            {
+                services.AddScoped<IEmailSender, MimeKitEmailSender>();
+            }
         }
 
         private static void RegisterEFRepositories(IServiceCollection services)
