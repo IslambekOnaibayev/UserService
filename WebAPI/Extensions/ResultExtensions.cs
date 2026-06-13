@@ -14,6 +14,10 @@
                     result.ValidationErrors
                         .GroupBy(e => e.Identifier ?? string.Empty)
                         .ToDictionary(g => g.Key, g => g.Select(e => e.ErrorMessage).ToArray())),
+                ResultStatus.Conflict => TypedResults.Problem(
+                    title: "Conflict",
+                    detail: string.Join("; ", result.Errors),
+                    statusCode: StatusCodes.Status409Conflict),
                 _ => TypedResults.Problem(
                     title: "Create failed",
                     detail: string.Join("; ", result.Errors),
