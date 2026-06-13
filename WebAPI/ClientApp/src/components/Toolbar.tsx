@@ -10,7 +10,6 @@ interface Props {
   onFilterChange: (v: string) => void
 }
 
-// Toolbar never disappears — buttons become disabled when nothing is selected.
 export function Toolbar({
   selectedCount, loading,
   onBlock, onUnblock, onDelete, onDeleteUnverified, onRefresh,
@@ -24,10 +23,7 @@ export function Toolbar({
                     border-b border-gray-200 dark:border-gray-800
                     bg-gray-50 dark:bg-gray-900/50">
 
-      {/* Action buttons */}
       <div className="flex items-center gap-2">
-
-        {/* Block — text button per spec */}
         <ToolbarBtn
           onClick={onBlock}
           disabled={!hasSelection || busy}
@@ -38,30 +34,25 @@ export function Toolbar({
           Block
         </ToolbarBtn>
 
-        {/* Unblock — icon only per spec */}
         <ToolbarIconBtn onClick={onUnblock} disabled={!hasSelection || busy} variant="green" title="Unblock selected">
           <UnlockIcon />
         </ToolbarIconBtn>
 
         <div className="w-px h-6 bg-gray-200 dark:bg-gray-700" />
 
-        {/* Delete selected — icon only */}
         <ToolbarIconBtn onClick={onDelete} disabled={!hasSelection || busy} variant="red" title="Delete selected">
           <TrashIcon />
         </ToolbarIconBtn>
 
-        {/* Delete unverified — icon only */}
         <ToolbarIconBtn onClick={onDeleteUnverified} disabled={busy} variant="orange" title="Delete all unverified users">
           <WarnIcon />
         </ToolbarIconBtn>
 
-        {/* Refresh */}
         <ToolbarIconBtn onClick={onRefresh} disabled={busy} variant="gray" title="Refresh">
           <RefreshIcon spinning={busy} />
         </ToolbarIconBtn>
       </div>
 
-      {/* Filter */}
       <div className="relative">
         <svg className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"
              fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -82,8 +73,6 @@ export function Toolbar({
     </div>
   )
 }
-
-// ─── Small button helpers ─────────────────────────────────────────────────────
 
 type Variant = 'amber' | 'green' | 'red' | 'orange' | 'gray'
 
@@ -129,8 +118,6 @@ function ToolbarIconBtn({ onClick, disabled, variant, title, children }: {
     </button>
   )
 }
-
-// ─── Icons ────────────────────────────────────────────────────────────────────
 
 function BlockIcon() {
   return (

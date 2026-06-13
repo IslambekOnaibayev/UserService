@@ -1,6 +1,3 @@
-// Lightweight auth state — no Redux needed.
-// Uses a module-level variable + custom event for cross-component reactivity.
-
 const TOKEN_KEY = 'auth_token'
 
 export function getToken(): string | null {
@@ -27,7 +24,6 @@ export function getCurrentUserEmail(): string | null {
   const parts = token.split('.')
   if (parts.length !== 3) return null
   try {
-    // JWT uses base64url — convert to standard base64 before atob
     const base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/')
     const padded = base64 + '='.repeat((4 - (base64.length % 4)) % 4)
     const payload = JSON.parse(atob(padded)) as Record<string, unknown>

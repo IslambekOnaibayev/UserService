@@ -4,7 +4,6 @@ import LoginPage    from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import UsersPage    from './pages/UsersPage'
 
-// Simple guard — redirects to /login if not authenticated
 function RequireAuth({ children }: { children: React.ReactNode }) {
   const loggedIn = useAuth()
   return loggedIn ? <>{children}</> : <Navigate to="/login" replace />

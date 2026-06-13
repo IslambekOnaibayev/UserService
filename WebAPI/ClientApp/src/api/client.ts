@@ -1,6 +1,3 @@
-// Centralized API client — all requests go through here.
-// Token is read from localStorage on every call (no stale closures).
-
 const BASE = import.meta.env.VITE_API_URL ?? ''
 
 function getToken(): string | null {
@@ -50,8 +47,6 @@ async function request<T>(
   return data as T
 }
 
-// ─── Auth ────────────────────────────────────────────────────────────────────
-
 export interface LoginResponse {
   token: string
   userId: string
@@ -69,8 +64,6 @@ export const authApi = {
   register: (name: string, email: string, password: string) =>
     request<RegisterResponse>('POST', '/api/auth/register', { name, email, password }),
 }
-
-// ─── Users ───────────────────────────────────────────────────────────────────
 
 export type UserStatus = 'Unverified' | 'Active' | 'Blocked'
 

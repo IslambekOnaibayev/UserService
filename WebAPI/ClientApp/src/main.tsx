@@ -4,7 +4,6 @@ import { BrowserRouter } from 'react-router-dom'
 import './index.css'
 import App from './App'
 
-// Apply saved theme before first render to avoid flash
 const saved = localStorage.getItem('theme')
 const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
 if (saved === 'dark' || (!saved && prefersDark)) {

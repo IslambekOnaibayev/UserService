@@ -5,7 +5,6 @@ import { Toolbar } from '@/components/Toolbar'
 import { StatusBadge } from '@/components/StatusBadge'
 import { Alert } from '@/components/ui'
 
-// Format date relative to now — matches the ТЗ "last seen" column
 function relativeTime(dateStr: string | null): string {
   if (!dateStr) return 'Never'
   const diff = Date.now() - new Date(dateStr).getTime()
@@ -28,7 +27,6 @@ export default function UsersPage() {
   const [filter, setFilter]       = useState('')
   const [toast, setToast]         = useState<Toast | null>(null)
 
-  // Auto-dismiss toast after 4 s
   useEffect(() => {
     if (!toast) return
     const t = setTimeout(() => setToast(null), 4000)
@@ -44,7 +42,7 @@ export default function UsersPage() {
     try {
       const res = await usersApi.list()
       setUsers(res.users)
-      setSelected(new Set()) // clear selection after refresh
+      setSelected(new Set())
     } catch {
       showToast('Failed to load users', 'error')
     } finally {
@@ -54,15 +52,12 @@ export default function UsersPage() {
 
   useEffect(() => { load() }, [])
 
-  // Filter by name or email
   const filtered = useMemo(() => {
     const q = filter.toLowerCase()
     return q ? users.filter(u =>
       u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q)
     ) : users
   }, [users, filter])
-
-  // ─── Selection ──────────────────────────────────────────────────────────────
 
   const allChecked  = filtered.length > 0 && filtered.every(u => selected.has(u.id))
   const someChecked = filtered.some(u => selected.has(u.id)) && !allChecked
@@ -82,8 +77,6 @@ export default function UsersPage() {
       return next
     })
   }
-
-  // ─── Toolbar actions ────────────────────────────────────────────────────────
 
   async function withRefresh(fn: () => Promise<void>, msg: string) {
     setLoading(true)
@@ -105,7 +98,6 @@ export default function UsersPage() {
 
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
 
-        {/* Page header */}
         <div className="mb-6 animate-fade-in">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">User Management</h1>
           <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
@@ -113,14 +105,12 @@ export default function UsersPage() {
           </p>
         </div>
 
-        {/* Toast */}
         {toast && (
           <div className="mb-4 animate-slide-down">
             <Alert kind={toast.kind}>{toast.msg}</Alert>
           </div>
         )}
 
-        {/* Card */}
         <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800
                         shadow-sm overflow-hidden animate-fade-in">
 
@@ -136,12 +126,10 @@ export default function UsersPage() {
             onRefresh={load}
           />
 
-          {/* Table */}
           <div className="overflow-x-auto">
             <table className="min-w-full">
               <thead>
                 <tr className="border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/30">
-                  {/* Select-all — checkbox only, no label (per ТЗ) */}
                   <th className="w-12 px-4 py-3">
                     <input
                       type="checkbox"
@@ -161,7 +149,6 @@ export default function UsersPage() {
 
               <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
                 {loading && users.length === 0 ? (
-                  // Skeleton rows while first load
                   Array.from({ length: 5 }).map((_, i) => (
                     <tr key={i}>
                       <td className="px-4 py-4">
@@ -209,7 +196,6 @@ export default function UsersPage() {
                           />
                         </td>
 
-                        {/* Name — struck-through if blocked */}
                         <td className="px-4 py-3.5">
                           <span className={`text-sm font-medium ${
                             user.status === 'Blocked'
@@ -241,7 +227,6 @@ export default function UsersPage() {
             </table>
           </div>
 
-          {/* Footer */}
           <div className="px-4 py-3 border-t border-gray-100 dark:border-gray-800
                           bg-gray-50 dark:bg-gray-900/30 flex items-center justify-between
                           text-xs text-gray-400 dark:text-gray-600">

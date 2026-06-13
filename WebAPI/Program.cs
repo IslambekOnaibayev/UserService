@@ -13,16 +13,6 @@ namespace WebAPI
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Railway sets PORT; Kestrel listens on it
-            var port = int.Parse(Environment.GetEnvironmentVariable("PORT") ?? "8080");
-            builder.WebHost.ConfigureKestrel(o =>
-            {
-                o.AddServerHeader = false;
-                o.ListenAnyIP(port);
-            });
-
-            // Railway PostgreSQL plugin provides DATABASE_URL (postgresql://user:pass@host:port/db).
-            // Parse it into the Npgsql connection string if ConnectionStrings:DefaultConnection is empty.
             var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
             if (!string.IsNullOrEmpty(databaseUrl) &&
                 string.IsNullOrEmpty(builder.Configuration.GetConnectionString("DefaultConnection")))

@@ -9,7 +9,6 @@ namespace WebAPI.Configurations
         {
             app.UseExceptionHandler();
 
-            // Serve React SPA from wwwroot (built by Vite, copied in Dockerfile)
             app.UseDefaultFiles();
             app.UseStaticFiles();
 
@@ -27,7 +26,6 @@ namespace WebAPI.Configurations
                 s.AdditionalSettings["filter"] = false;
             });
 
-            // Client-side routing: return index.html for any route not matched by the API
             app.MapFallbackToFile("index.html");
 
             await ApplyMigrationsAsync(app);

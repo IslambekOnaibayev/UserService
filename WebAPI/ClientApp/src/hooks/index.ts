@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from 'react'
 import { isLoggedIn } from '@/store/auth'
 import { isDark } from '@/store/theme'
 
-// Re-renders whenever auth-changed fires
 export function useAuth() {
   const [loggedIn, setLoggedIn] = useState(isLoggedIn)
 
@@ -15,7 +14,6 @@ export function useAuth() {
   return loggedIn
 }
 
-// Re-renders whenever theme-changed fires
 export function useTheme() {
   const [dark, setDark] = useState(isDark)
 
@@ -28,7 +26,6 @@ export function useTheme() {
   return dark
 }
 
-// Generic async action with loading + error state
 export function useAsync<T>() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)

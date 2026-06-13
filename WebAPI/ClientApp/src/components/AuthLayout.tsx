@@ -14,7 +14,6 @@ export function AuthLayout({ title, subtitle, children }: Props) {
       <div className="w-full max-w-sm animate-fade-in">
         <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl
                         border border-gray-100 dark:border-gray-800 p-8">
-          {/* Header */}
           <div className="text-center mb-8">
             <div className="flex justify-center mb-4">
               <Logo />

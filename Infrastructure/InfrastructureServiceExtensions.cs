@@ -52,7 +52,7 @@ namespace Infrastructure
             IServiceCollection services, IConfiguration configuration)
         {
             AddDbContextWithSqlServer(services, configuration);
-            services.AddScoped<IEmailSender, MimeKitEmailSender>();
+            services.AddScoped<IEmailSender, FakeEmailSender>();
             services.AddScoped<IPasswordHasher, PasswordHasher>();
         }
 
