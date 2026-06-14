@@ -72,12 +72,35 @@ namespace Infrastructure
 
         private static void RegisterEmailSender(IServiceCollection services, IConfiguration configuration)
         {
+            var gmailClientId = configuration["Gmail:ClientId"];
+            if (!string.IsNullOrWhiteSpace(gmailClientId))
+            {
+                services.AddHttpClient("gmail");
+                services.Configure<GmailConfiguration>(
+                    configuration.GetSection(GmailConfiguration.SectionName));
+                services.AddScoped<IEmailSender, GmailEmailSender>();
+                return;
+            }
+
             var sendGridApiKey = configuration["SendGrid:ApiKey"];
             if (!string.IsNullOrWhiteSpace(sendGridApiKey))
             {
                 services.Configure<SendGridConfiguration>(
                     configuration.GetSection(SendGridConfiguration.SectionName));
                 services.AddScoped<IEmailSender, SendGridEmailSender>();
+                return;
+            }
+
+            var brevoApiKey = configuration["Brevo:ApiKey"];
+            if (!string.IsNullOrWhiteSpace(brevoApiKey))
+            {
+                services.AddHttpClient("brevo", c =>
+                {
+                    c.DefaultRequestHeaders.Add("api-key", brevoApiKey);
+                });
+                services.Configure<BrevoConfiguration>(
+                    configuration.GetSection(BrevoConfiguration.SectionName));
+                services.AddScoped<IEmailSender, BrevoEmailSender>();
                 return;
             }
 
