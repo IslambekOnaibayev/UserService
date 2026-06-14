@@ -72,6 +72,15 @@ namespace Infrastructure
 
         private static void RegisterEmailSender(IServiceCollection services, IConfiguration configuration)
         {
+            var sendGridApiKey = configuration["SendGrid:ApiKey"];
+            if (!string.IsNullOrWhiteSpace(sendGridApiKey))
+            {
+                services.Configure<SendGridConfiguration>(
+                    configuration.GetSection(SendGridConfiguration.SectionName));
+                services.AddScoped<IEmailSender, SendGridEmailSender>();
+                return;
+            }
+
             var resendApiKey = configuration["Resend:ApiKey"];
             if (!string.IsNullOrWhiteSpace(resendApiKey))
             {
@@ -82,11 +91,10 @@ namespace Infrastructure
                 services.Configure<ResendConfiguration>(
                     configuration.GetSection(ResendConfiguration.SectionName));
                 services.AddScoped<IEmailSender, ResendEmailSender>();
+                return;
             }
-            else
-            {
-                services.AddScoped<IEmailSender, MimeKitEmailSender>();
-            }
+
+            services.AddScoped<IEmailSender, MimeKitEmailSender>();
         }
 
         private static void RegisterEFRepositories(IServiceCollection services)
