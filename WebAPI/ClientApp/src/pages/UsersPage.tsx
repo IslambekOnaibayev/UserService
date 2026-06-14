@@ -3,7 +3,7 @@ import { usersApi, type User } from '@/api/client'
 import { Navbar } from '@/components/Navbar'
 import { Toolbar } from '@/components/Toolbar'
 import { StatusBadge } from '@/components/StatusBadge'
-import { Alert } from '@/components/ui'
+import { Alert, ConfirmModal } from '@/components/ui'
 
 function relativeTime(dateStr: string | null): string {
   if (!dateStr) return 'Never'
@@ -26,6 +26,7 @@ export default function UsersPage() {
   const [selected, setSelected]   = useState<Set<string>>(new Set())
   const [filter, setFilter]       = useState('')
   const [toast, setToast]         = useState<Toast | null>(null)
+  const [confirm, setConfirm]     = useState<{ title: string; message: string; fn: () => Promise<void> } | null>(null)
 
   useEffect(() => {
     if (!toast) return
@@ -90,6 +91,10 @@ export default function UsersPage() {
     }
   }
 
+  function askConfirm(title: string, message: string, fn: () => Promise<void>) {
+    setConfirm({ title, message, fn })
+  }
+
   const ids = [...selected]
 
   return (
@@ -121,8 +126,16 @@ export default function UsersPage() {
             onFilterChange={setFilter}
             onBlock={() => withRefresh(() => usersApi.block(ids), 'Users blocked')}
             onUnblock={() => withRefresh(() => usersApi.unblock(ids), 'Users unblocked')}
-            onDelete={() => withRefresh(() => usersApi.delete(ids), 'Users deleted')}
-            onDeleteUnverified={() => withRefresh(() => usersApi.deleteUnverified(), 'Unverified users deleted')}
+            onDelete={() => askConfirm(
+              'Delete selected users',
+              `Are you sure you want to delete ${selected.size} selected user${selected.size !== 1 ? 's' : ''}? This action cannot be undone.`,
+              () => withRefresh(() => usersApi.delete(ids), 'Users deleted')
+            )}
+            onDeleteUnverified={() => askConfirm(
+              'Delete unverified users',
+              'Are you sure you want to delete all unverified users? This action cannot be undone.',
+              () => withRefresh(() => usersApi.deleteUnverified(), 'Unverified users deleted')
+            )}
             onRefresh={load}
           />
 
@@ -235,6 +248,15 @@ export default function UsersPage() {
           </div>
         </div>
       </main>
+
+      {confirm && (
+        <ConfirmModal
+          title={confirm.title}
+          message={confirm.message}
+          onConfirm={() => { setConfirm(null); confirm.fn() }}
+          onCancel={() => setConfirm(null)}
+        />
+      )}
     </div>
   )
 }
