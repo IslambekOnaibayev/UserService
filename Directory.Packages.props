@@ -61,6 +61,5 @@
     <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.13.0" />
     <PackageVersion Include="Aspire.Hosting.Testing" Version="9.5.1" />
     <PackageVersion Include="Vogen" Version="8.0.5" />
-    <PackageVersion Include="SendGrid" Version="9.29.3" />
   </ItemGroup>
 </Project>

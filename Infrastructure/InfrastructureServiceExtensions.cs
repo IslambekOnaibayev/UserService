@@ -82,28 +82,6 @@ namespace Infrastructure
                 return;
             }
 
-            var sendGridApiKey = configuration["SendGrid:ApiKey"];
-            if (!string.IsNullOrWhiteSpace(sendGridApiKey))
-            {
-                services.Configure<SendGridConfiguration>(
-                    configuration.GetSection(SendGridConfiguration.SectionName));
-                services.AddScoped<IEmailSender, SendGridEmailSender>();
-                return;
-            }
-
-            var brevoApiKey = configuration["Brevo:ApiKey"];
-            if (!string.IsNullOrWhiteSpace(brevoApiKey))
-            {
-                services.AddHttpClient("brevo", c =>
-                {
-                    c.DefaultRequestHeaders.Add("api-key", brevoApiKey);
-                });
-                services.Configure<BrevoConfiguration>(
-                    configuration.GetSection(BrevoConfiguration.SectionName));
-                services.AddScoped<IEmailSender, BrevoEmailSender>();
-                return;
-            }
-
             var resendApiKey = configuration["Resend:ApiKey"];
             if (!string.IsNullOrWhiteSpace(resendApiKey))
             {
